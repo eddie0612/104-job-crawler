@@ -1,0 +1,15 @@
+# Python 自動產生的快取
+__pycache__/
+*.py[cod]
+
+# 資料庫檔案 (這是結果，不要上傳)
+*.db
+*.sqlite3
+
+# 編輯器設定
+.vscode/
+.idea/
+
+# 虛擬環境 (如果有的話)
+venv/
+env/
