@@ -24,11 +24,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        # 如果你有用 pytest，記得這裡也要 pip install pytest
+        pip install pytest
 
     - name: 執行爬蟲/測試 (Run Crawler)
       # 這裡我們使用無頭模式 (Headless) 執行
       run: |
-        python crawler.py
-      # 如果你有寫測試檔，可以改成：
-      # pytest
+        pytest
