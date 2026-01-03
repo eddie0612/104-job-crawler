@@ -1,3 +1,4 @@
+![CI Status](https://github.com/eddie0612/104-job-crawler/actions/workflows/main.yml/badge.svg)
 # 104 Job Crawler (職缺自動化爬蟲)
 
 ## 📖 專案說明
