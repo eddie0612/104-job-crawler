@@ -3,9 +3,9 @@ name: 104 Crawler CI
 # 觸發時機：當你 Push 程式碼到 master 分支時
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
