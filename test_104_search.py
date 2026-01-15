@@ -38,7 +38,30 @@ def test_search_results(driver):
     
     # 抓取所有職缺卡片
     job_cards = driver.find_elements(By.CSS_SELECTOR, ".info-container")
-    
     # 驗證 (Assertion)
     print(f"找到 {len(job_cards)} 筆職缺")
     assert len(job_cards) > 0, "錯誤：搜尋結果為空，找不到任何職缺！"
+    
+    for card in job_cards[:3]:
+        title_elm = card.find_element(By.CSS_SELECTOR,"a[data-gtm-joblist*='職缺名稱']")
+        title = title_elm.get_attribute("title")
+        company_elm = card.find_element(By.CSS_SELECTOR,"a[data-gtm-joblist*='公司名稱']")
+        company = company_elm.get_attribute("title")
+        
+        assert len(title) > 0, "職缺標題不該是空白的"
+        assert len(company) > 0, "公司名稱不該是空白的"
+        
+def test_pagination(driver):
+    """測試案例 3:翻頁功能測試"""
+    driver.get("https://www.104.com.tw/jobs/search/?keyword=軟體測試")
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".info-container"))
+    )
+    #紀錄現在網址
+    old_url = driver.current_url
+    next_btn = driver.find_element(By.CSS_SELECTOR,"li.paging__item:last-child a")
+    driver.execute_script("arguments[0].click();",next_btn)
+    WebDriverWait(driver, 10).until(EC.url_changes(old_url))
+    #記錄新網址
+    new_url = driver.current_url
+    assert old_url != new_url,"翻頁失敗"
