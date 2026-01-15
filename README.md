@@ -2,10 +2,6 @@
 
 ![CI Status](https://github.com/eddie0612/104-job-crawler/actions/workflows/main.yml/badge.svg)
 
-# 104 Job Crawler & Automation Testing
-
-![CI Status](https://github.com/eddie0612/104-job-crawler/actions/workflows/main.yml/badge.svg)
-
 ## 📖 專案說明
 這是一個結合 **Python Selenium** 與 **Pytest** 的自動化測試與爬蟲專案。
 主要功能除了針對 104 人力銀行進行職缺爬取與資料分析外，更整合了 **GitHub Actions** 實現 CI/CD 持續整合流程，確保每次程式碼更新時，都能自動執行 UI 測試腳本以驗證系統穩定性。
