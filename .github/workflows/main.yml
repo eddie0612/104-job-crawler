@@ -27,6 +27,5 @@ jobs:
         pip install pytest
 
     - name: 執行爬蟲/測試 (Run Crawler)
-      # 這裡我們使用無頭模式 (Headless) 執行
       run: |
         pytest

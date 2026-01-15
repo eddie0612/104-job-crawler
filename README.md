@@ -1,66 +1,62 @@
+# 104 Job Crawler & Automation Testing
+
 ![CI Status](https://github.com/eddie0612/104-job-crawler/actions/workflows/main.yml/badge.svg)
-# 104 Job Crawler (職缺自動化爬蟲)
 
 ## 📖 專案說明
-這是一個基於 **Python** 與 **Selenium WebDriver** 開發的自動化爬蟲工具。
-主要功能為針對 104 人力銀行進行職缺關鍵字搜尋，自動遍歷多個分頁，擷取職缺關鍵資訊並結構化存入 **SQLite** 資料庫。
+這是一個結合 **Python Selenium** 與 **Pytest** 的自動化測試與爬蟲專案。
+主要功能除了針對 104 人力銀行進行職缺爬取與資料分析外，更整合了 **GitHub Actions** 實現 CI/CD 持續整合流程，確保每次程式碼更新時，都能自動執行 UI 測試腳本以驗證系統穩定性。
 
-本專案實作了針對動態網頁 (SPA) 的處理機制，並包含基礎的反爬蟲防禦策略，解決了網頁自動化中常見的動態載入與遮擋問題。
+本專案展示了從「資料爬取」、「資料庫設計」到「自動化測試部署」的完整開發流程。
 
-## 🛠️ 技術堆疊
+## 🛠️ 技術堆疊 (Tech Stack)
 * **語言**: Python 3.x
-* **核心庫**: Selenium WebDriver
+* **自動化框架**: Selenium WebDriver
+* **測試框架**: Pytest
+* **CI/CD**: GitHub Actions
 * **資料庫**: SQLite 3
-* **選擇器策略**: CSS Selectors (Advanced), XPath
 * **版本控制**: Git
 
 ## ✨ 核心功能
 
-### 1. 動態分頁處理 (Dynamic Pagination Handling)
-* 針對 RWD 響應式網頁結構，捨棄傳統的文字定位 (Link Text)，改用 **CSS Selector (`li:last-child`)** 精準定位動態變化的「下一頁」按鈕。
-* 整合 **JavaScript Executor** 進行事件觸發，解決按鈕可能被廣告視窗或 Cookie 同意條款遮擋的問題 (`ElementClickInterceptedException`)。
+### 1. 自動化測試與 CI/CD (Automated Testing)
+* **單元測試整合**：使用 **Pytest** 撰寫測試腳本 (`test_104_search.py`)，驗證網頁標題、搜尋功能與資料載入狀態。
+* **持續整合 (CI)**：透過 `.github/workflows/main.yml` 設定 GitHub Actions，在每次 Push 代碼時自動啟動 Linux 雲端環境。
+* **無頭模式 (Headless Mode)**：實作 Chrome Headless 模式，使測試能在無介面的伺服器環境中穩定運行。
 
-### 2. 防禦性程式設計 (Defensive Programming)
-* **隨機延遲 (Random Delay)**：在請求之間加入隨機時間間隔，模擬人類操作行為。
-* **異常處理 (Exception Handling)**：實作 `try-except` 機制處理網頁載入超時或元素定位失敗，確保爬蟲程序穩定運行。
+### 2. 動態爬蟲技術 (Web Scraping)
+* **RWD 頁面處理**：利用 CSS Advanced Selector (`li:last-child`) 與 JS Executor 解決動態分頁按鈕被遮擋的問題。
+* **防禦性程式設計**：加入隨機延遲 (Random Delay) 與異常處理 (Try-Except)，提升爬蟲的抗干擾能力與穩定性。
 
-### 3. 資料持久化與完整性 (Data Persistence)
-* **自動初始化**：程式啟動時自動檢測並建立 SQLite 資料庫結構 (`init_db`)。
-* **資料去重**：利用 SQL 的 `UNIQUE(job_title, company)` 複合鍵約束與 `INSERT OR IGNORE` 語法，防止重複資料寫入。
-* **屬性提取**：區分 `innerText` 與 `title` 屬性，確保擷取到被截斷的完整公司名稱與職缺標題。
+### 3. 資料持久化 (Data Persistence)
+* **SQLite 整合**：自動初始化資料庫結構，並使用 `UNIQUE` 複合鍵防止職缺資料重複寫入。
 
 ## 🚀 安裝與執行
 
-### 1. 環境設定
-確認已安裝 Python 3.x 與 Google Chrome 瀏覽器。
-安裝專案依賴套件：
+### 1. 環境安裝
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. 執行爬蟲
-直接執行主程式：
+### 2. 執行自動化測試 (Run Tests)
+執行 Pytest 進行網頁功能驗證：
+```bash
+pytest
+```
+*若看到綠色 Passed 字樣，代表 104 網站功能正常且腳本執行無誤。*
+
+### 3. 執行爬蟲 (Run Crawler)
+啟動主程式進行資料爬取：
 ```bash
 python crawler.py
 ```
-程式將自動執行以下流程：
-1. 初始化 `job_hunter.db` 資料庫。
-2. 開啟 Chrome 瀏覽器並導向 104 搜尋頁面。
-3. 依序爬取指定頁數 (預設為前 15 頁) 的職缺資訊。
-4. 將資料寫入資料庫。
-
-### 3. 資料查看
-爬取完成後，資料將儲存於 `job_hunter.db` 檔案中。
-可使用任何支援 SQLite 的工具 (如 **DB Browser for SQLite** 或 VS Code 擴充套件) 進行查詢。
 
 ## 📂 專案結構
 ```text
 .
-├── crawler.py          # 爬蟲主程式 (包含資料庫初始化與邏輯控制)
-├── requirements.txt    # 專案依賴清單
-├── README.md           # 專案說明文件
-└── .gitignore          # Git 忽略設定
+├── .github/workflows/  # GitHub Actions CI 設定檔
+├── crawler.py          # 爬蟲主程式 (資料爬取)
+├── test_104_search.py  # Pytest 測試腳本 (功能驗證)
+├── job_hunter.db       # SQLite 資料庫 (自動生成)
+├── requirements.txt    # 套件依賴清單
+└── README.md           # 專案說明文件
 ```
-
-## ⚠️ 免責聲明
-本專案僅供學術研究與技術練習使用，請勿用於任何商業用途或惡意攻擊網站。使用時請遵守目標網站的 `robots.txt` 規範與相關服務條款。
