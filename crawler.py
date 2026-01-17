@@ -58,15 +58,15 @@ def start_crawler():
             job_cards = driver.find_elements(By.CSS_SELECTOR,".info-container")
             print(f"找到{len(job_cards)}個職缺")
             
-            crawled_data = []
+            crawled_data = []  # 用來暫存這一頁符合條件的資料
             for card in job_cards:
                 try:
                     title_elm = card.find_element(By.CSS_SELECTOR,"a[data-gtm-joblist*='職缺名稱']")
                     title = title_elm.get_attribute("title")
                     
                     keywords = ["測試", "Test", "QA", "Quality", "驗證"]
-                    if not any(keywords in title for keyword in keywords):
-                        continue
+                    if not any(keyword in title for keyword in keywords):
+                        continue  # 如果標題不包含任何關鍵字，跳過這筆
                     
                     link = title_elm.get_attribute("href")
                     company_elm = card.find_element(By.CSS_SELECTOR,"a[data-gtm-joblist*='公司名稱']")
@@ -84,9 +84,11 @@ def start_crawler():
             if crawled_data:
                 save_to_db(crawled_data)
             try:
+                # 尋找「下一頁」按鈕
                 next_btn = driver.find_element(By.CSS_SELECTOR,"li.paging__item:last-child a")
                 driver.execute_script("arguments[0].click();",next_btn)
                 page += 1
+                # 設定安全機制：超過15頁就停止，避免無限迴圈
                 if page > 15:
                     break
                 print(f"前往第{page}頁~")

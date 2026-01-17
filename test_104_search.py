@@ -31,7 +31,6 @@ def test_search_results(driver):
     driver.get("https://www.104.com.tw/jobs/search/?keyword=軟體測試")
     
     # 等待職缺列表載入 (最多等 10 秒)
-    # 定位 class 為 js-job-item 的文章區塊
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".info-container"))
     )
